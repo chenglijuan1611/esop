@@ -1,0 +1,476 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+html, body {
+    width: 100%;
+    height: 100%;
+    /* background-color:#00204c; */
+    overflow: hidden;
+}
+body {
+	background: url('../images/background/background.png') no-repeat; 
+    background-size: cover;
+    background-position: center;
+}
+.contain {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+.dafeng {
+	position: absolute;
+    left: 78%;
+    top: 5%;
+    cursor: pointer;
+    opacity:0.6;
+}
+.mes {
+    position: absolute;
+    left: 58%;
+    top: 20%;
+    cursor: pointer;
+    width: 22%;
+}
+.Ai {
+    position: absolute;
+    left: 45%;
+    top: 55%;
+    cursor: pointer;
+    width: 16%;
+}
+.circle1 {
+    position: absolute;
+    left: 30%;
+    top: 25%;
+    width: 12%;
+}
+.circle2 {
+    position: absolute;
+    left: 80%;
+    top: -25%;
+    width: 18%;
+}
+.circle3 {
+    position: absolute;
+    left: 30%;
+    top: 80%;
+    width: 13%;
+}
+.circle4 {
+    position: absolute;
+    left: 93%;
+    top: 68%;
+    width: 16%;
+}
+.circle5 {
+    position: absolute;
+    left: 30%;
+    top: 25%;
+    width: 13%;
+}
+.cloud {
+    position: absolute;
+    left: 84%;
+    top: 30%;
+    cursor: pointer;
+    width: 12%;
+}
+.computer {
+    position: absolute;
+    left: 3%;
+    top: 10%;
+    cursor: pointer;
+    width: 23%;
+}
+.net {
+    position: absolute;
+    left: -6%;
+    top: 45%;
+    cursor: pointer;
+    width: 16%;
+}
+.plain {
+    position: absolute;
+    left: 15%;
+    top: 78%;
+    cursor: pointer;
+    width: 13%;
+}
+.trans {
+    position: absolute;
+    left: 8%;
+    top: 60%;
+    cursor: pointer;
+    width: 11%;
+}
+.wifi {
+    position: absolute;
+    left: 69%;
+    top: 49%;
+    cursor: pointer;
+    width: 18%;
+} 
+.hotel {
+    position: absolute;
+    left: 44%;
+    top: -2%;
+    cursor: pointer;
+    width: 18%;
+}
+.web {
+    position: absolute;
+    left: 22%;
+    top: -19%;
+    cursor: pointer;
+    width: 22%;
+}
+.logo_mes {
+	display: none;
+}
+#loginbox {
+    position: absolute;
+    top: 37.1%;
+    left: 50%;
+    margin-left: -10%;
+    width: 20%;
+    height: 3%;
+    line-height: 3%;
+    font-size: 14px;
+    font-weight: bold;
+    color: skyblue;
+    text-shadow: 1px 1px 4px deepskyblue; 
+}
+/* Ã½Ìå²éÑ¯ */
+
+@media screen and (max-width: 900px) {
+	.form_wrap {
+		display:none;
+   	 	position: relative;
+   	 	top: 35%;
+   		left: 45%;
+    	margin-left: -10%;
+    	background-color: rgba(0, 0, 0, 0.3);
+    	width: 30%;
+    	/* height: 35%; */
+    	padding: 0;
+    	/* overflow: hidden; */
+	}
+	.form_wrap form {
+	    position: relative;
+	    width: 100%;
+	    height: 100%;
+	}
+	.platform {
+	    position: relative;
+	    margin-left: 5px;
+	    margin-top: 5px;
+	}
+	.platform img {
+	    width: 14%;
+	}
+	.platform>span {
+	    position: absolute;
+	    color: skyblue;
+	    text-shadow: 1px 1px 4px deepskyblue; 
+	    top: 54%;
+	    font-size: 12px;
+	}
+	[class*=input-group] {
+	    margin: 2% 15% 2% 15%;
+	    width: 70%;
+	    border-radius: 5px;
+	    background-color: rgba(0, 0, 0, 0.4);
+	}
+	[class*=input-group-addon] {
+	    padding: 0;
+	    width:13.37%;
+	    height: 100%; 
+	    border: none;
+	    outline-style: none;
+	}
+	[class*=input-group-addon]>img {
+	    width: 24px;
+	    height: 24px;
+	    margin-top: 1px;
+	} 
+	.user {
+	    color: white;
+	    height: 24px;
+	    font-size: 12px;
+	    border: none;
+	    outline-style: none;
+	    background-color: rgba(0, 0, 0, 0.4);
+	}
+	.user:-webkit-autofill { 
+		box-shadow: 0 0 0 1000px white inset !important;
+	}
+	.password {
+	    color: white;
+	    font-size: 12px;
+	    height: 24px;
+	    border: none;
+	    outline-style: none;
+	    background-color: rgba(0, 0, 0, 0.4);
+	}
+	.password:-webkit-autofill {
+		box-shadow: 0 0 0 1000px white inset !important;
+	}
+	.checkInp {
+	    position: relative;
+	    width: 70%;
+	    margin: 0 15%;
+	}
+	.checkInp>input {
+		position: relative;
+		top:1px;
+	    margin-left: -10px;
+	}
+	.passText {
+	    display: inline-block;
+	    margin-left: 5px;
+	    color: white;
+	    font-size: 12px;
+	}
+	
+	.register {
+	    border-radius: 5px;
+	    justify-content: center;
+	    align-items: center;
+	    display: flex;
+	    width: 70%;
+	    height: 26px;
+	    margin: 2% 15% 4% 15%;
+	    font-weight: bold;
+	    
+	}
+	 .register>span {
+            font-size: 14px;
+            letter-spacing: 10px;
+            padding-left: 10px;
+            font-weight: bolder;
+            display: block;
+            color: white;
+            text-decoration-line: none;
+        }
+}
+@media screen and (min-width: 900px) and (max-width: 1280px){
+	.form_wrap {
+		display:none;
+   	 	position: relative;
+   	 	top: 35%;
+   		left: 45%;
+    	margin-left: -10%;
+    	background-color: rgba(0, 0, 0, 0.3);
+    	width: 30%;
+    	padding: 0;
+	}
+	.form_wrap form {
+	    position: relative;
+	    width: 100%;
+	    height: 100%;
+	}
+	.platform {
+	    position: relative;
+	    margin-left: 5px;
+	    margin-top: 5px;
+	}
+	.platform img {
+	    width: 18%;
+	}
+	.platform>span {
+	    position: absolute;
+	    color: skyblue;
+	    text-shadow: 1px 1px 4px deepskyblue; 
+	    top: 54%;
+	    font-size: 14px;
+	}
+	[class*=input-group] {
+	    margin: 6% 15% 1% 15%;
+	    width: 70%;
+	    border-radius: 5px;
+	    background-color: rgba(0, 0, 0, 0.4);
+	}
+	[class*=input-group-addon] {
+	    padding: 0;
+	    width:13.37%;
+	    height: 100%; 
+	    border: none;
+	    outline-style: none;
+	}
+	[class*=input-group-addon]>img {
+	    width: 29px;
+	    height: 29px;
+	    margin-top: 1px;
+	} 
+	.user {
+	    color: white;
+	    height: 29px;
+	    font-size: 14px;
+	    border: none;
+	    outline-style: none;
+	    background-color: rgba(0, 0, 0, 0.4);
+	}
+	.user:-webkit-autofill { 
+		box-shadow: 0 0 0 1000px white inset !important;
+	}
+	.password {
+	    color: white;
+	    font-size: 14px;
+	    height: 29px;
+	    border: none;
+	    outline-style: none;
+	    background-color: rgba(0, 0, 0, 0.4);
+	}
+	.password:-webkit-autofill {
+		box-shadow: 0 0 0 1000px white inset !important;
+	}
+	.checkInp {
+	    position: relative;
+	    width: 70%;
+	    margin: 0 15%;
+	}
+	.checkInp>input {
+		position: relative;
+		top:1px;
+	    margin-left: -20px;
+	}
+	.passText {
+	    display: inline-block;
+	    margin-left: 5px;
+	    color: white;
+	    font-size: 14px;
+	}
+	.register {
+	    border-radius: 5px;
+	    height: 30px;
+	    display: flex;
+	    justify-content: center;
+	    align-items: center;
+	    width: 70%;
+	    margin: 3% 15% 3% 15%;
+	    font-weight: bold;
+	    
+	}
+	 .register>span {
+            font-size: 16px;
+            padding-left: 20px;
+            letter-spacing: 20px;
+            font-weight: bolder;
+            display: block;
+            color: white;
+            text-decoration-line: none;
+        }
+}
+
+@media screen and (min-width: 1281px){
+	.form_wrap {
+		display:none;
+   	 	position: relative;
+    	top: 35%;
+    	left: 50%;
+    	margin-left: -10%;
+    	background-color: rgba(0, 0, 0, 0.3);
+    	width: 20%;
+    	padding: 0;
+	}
+	
+	.form_wrap form {
+	    position: relative;
+	    width: 100%;
+	    height: 100%;
+	}
+	.platform {
+	    position: relative;
+	    margin-left: 5px;
+	    margin-top: 5px;
+	}
+	.platform img {
+	    width: 20%;
+	}
+	.platform span {
+	    position: absolute;
+	    color: skyblue;
+	    text-shadow: 1px 1px 4px deepskyblue; 
+	    top: 54%;
+	    font-size: 22px;
+	}
+	[class*=input-group] {
+	    margin: 6% 15% 6% 15%;
+	    width: 70%;
+	    border-radius: 5px;
+	    background-color: rgba(0, 0, 0, 0.4);
+	}
+	[class*=input-group-addon] {
+	    padding: 0;
+	    width:13.37%;
+	    height: 100%; 
+	    border: none;
+	    outline-style: none;
+	}
+	[class*=input-group-addon]>img {
+	    width: 30px;
+	    height: 30px;
+	    margin-top: 1px;
+	} 
+	.user {
+	    color: white;
+	    height: 30px;
+	    font-size: 16px;
+	    border: none;
+	    outline-style: none;
+	    background-color: rgba(0, 0, 0, 0.4);
+	}
+	.user:-webkit-autofill { 
+		box-shadow: 0 0 0 1000px white inset !important;
+	}
+	.password {
+	    color: white;
+	    font-size: 16px;
+	    height: 30px;
+	    border: none;
+	    outline-style: none;
+	    background-color: rgba(0, 0, 0, 0.4);
+	}
+	.password:-webkit-autofill {
+		box-shadow: 0 0 0 1000px white inset !important;
+	}
+	.checkInp {
+	    position: relative;
+	    width: 70%;
+	    margin: 0 15%;
+	}
+	.checkInp>input {
+		position: relative;
+		top:1px;
+	    margin-left: -20px;
+	} 
+	.passText {
+	    display: inline-block;
+	    margin-left: 5px;
+	    color: white;
+	    font-size: 14px;
+	}
+	.register {
+	    border-radius: 5px;
+	    height: 32px;
+	    display: flex;
+	    justify-content: center;
+	    align-items: center;
+	    font-size: 16px;
+	    width: 70%;
+	    margin: 3% 15%;
+	    font-weight: bold;
+	   
+	}
+	 .register>span {
+            font-size: 18px;
+            padding-left: 20px;
+            letter-spacing: 20px;
+            font-weight: bolder;
+            display: block;
+            color: white;
+            text-decoration-line: none;
+        }
+}
+

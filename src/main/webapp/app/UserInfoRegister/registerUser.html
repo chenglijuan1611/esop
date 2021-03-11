@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>信息登记</title>
+		<link rel="stylesheet" type="text/css" href="bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="registerUser.css"/>
+	</head>
+	<body>
+	<div class="main-content">
+		<div class="formTitle">
+			个人信息登记
+		</div>
+		<div class="container userMsg">
+			<form class="form-horizontal" role="form">
+				<div class="form-group">
+					<label for="username" class="col-sm-2 control-label">姓名</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="username" 
+							   placeholder="请输入姓名" required="required">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="workshop" class="col-sm-2 control-label">车间</label>
+					<div class="col-sm-10">
+						<select class="form-control" id="workshop" placeholder="请选择车间" >
+							<option value ="workshop0">请选择车间</option>					<!-- workshop0表示未选择车间 -->
+							<option value ="w1">一车间</option>
+							<option value ="w2">二车间</option>
+							<option value ="w3">三车间</option>
+							<option value ="w4">四车间</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="workline" class="col-sm-2 control-label">产线</label>
+					<div class="col-sm-10">
+						<select class="form-control" id="workline" placeholder="请选择产线" >
+							
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="level" class="col-sm-2 control-label">职位</label>
+					<div class="col-sm-10">
+						<select class="form-control" id="level" placeholder="请选择职位">
+							<option value ="level0">请选择职位</option>				<!-- level0表示未选择职位 -->
+							<option value ="l1">产线负责人</option>
+							<option value ="l2">车间主任</option>
+							<option value ="l3">生产副总</option>
+							<option value ="l4">生产总</option>
+							<option value ="l5">总经理</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<button id="submitBtn" type="" class="btn btn-success form-control" onclick="submitMsg()">确定</button>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10 text-right" onclick="help()"><a style="color: #a8071a;text-decoration: none;" href="javascript:void(0)"><img src="bidu.png" >填写必读</a></div>
+					<div id="helpText" class="col-sm-offset-2 col-sm-10" style="display: none;">
+						<p>1.姓名和职位为必填项，请务必填写真实姓名</p>
+						<p>2.副总(含)以上职位，仅填写姓名并选择职位即可</p>
+						<p>3.车间主任仅选择车间即可，请勿选择产线</p>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<script src="jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="registerUser.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+</html>

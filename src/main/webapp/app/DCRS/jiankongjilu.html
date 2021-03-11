@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>监控记录</title>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/buttons.css"/>
+		<link rel="stylesheet" type="text/css" href="css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="css/jiankongjilu.css"/>
+	</head>
+	<body>
+		<input type="hidden" class="userName">
+		<input type="hidden" class="userID">
+		<input type="hidden" class="INSPECTIONRECORD_ID">
+		<input type="hidden" id="workshopHidden">
+		<input type="hidden" id="equnameHidden">
+		<input type="hidden" id="equCodeHidden">
+		<header>
+			<div class="logo header_item">
+				<img src="img/logo.png" width="50">
+			</div>
+			<div class="title header_item">
+				达峰智能点检系统
+			</div>
+			<div class="menuName header_item">
+				监控记录
+			</div>
+			<div class="noScreen header_item">
+				<a href="javascript:void(0)" onclick="exitScreen()" style="font-size:small;color: #000;">退出全屏</a>
+			</div>
+			<div class="fullScreen header_item">
+				<a href="javascript:void(0)" onclick="fullScreen()"><img alt="" src="img/full.jpg" height="20"></a>
+			</div>
+			<div class="exit header_item">
+				<a href="javascript:void(0)" onclick="exit()">退出</a>
+			</div>
+			<div class="user header_item">
+				<span style="margin-right: 5px;" id="">欢迎</span><span id="user"></span>
+			</div>		
+		</header>
+		<div class="search_content">
+			<div class="left_content">
+				<div class="back left_content_item">
+					<span style="font-weight: bold;color: #1890ff;cursor: pointer;" onclick="back()">返回</span>
+				</div>
+				<div class="equCode left_content_item">
+					<span style="font-weight: bold;">设备编码:</span>
+					<input type="text" class="" name="" id="equCode" value="" placeholder="" />
+				</div>
+				<div class="submitBtn left_content_item">
+					<button class="btn btn-primary btn-sm" onclick="getEquMessage()">查找</button>
+				</div>
+				<div class="scan left_content_item">
+					<img src="img/scan.jpg" height="27" >
+				</div>
+			</div>
+			<div class="right_content">
+			<div class="equName right_content_item">
+				<span style="font-weight: bold;">当前设备:</span>
+				<span id="equname"></span>
+			</div>
+			<div class="workShop right_content_item">
+				<span style="font-weight: bold;">车间:</span>
+				<span id="workshop"></span>
+			</div>
+			<div class="checkPerson right_content_item">
+				<span style="font-weight: bold;">检查人:</span>
+				<span id="checker"></span>
+			</div>
+			</div>
+		</div>
+		<div class="main_content">
+			
+		</div>
+	</body>
+	<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/common.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/jiankongjilu.js" type="text/javascript" charset="utf-8"></script>
+</html>

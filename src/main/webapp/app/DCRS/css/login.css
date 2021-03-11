@@ -1,0 +1,17 @@
+html,body{
+ 	width:100%;
+	height:420px;
+	overflow:hidden;
+}	
+body{
+	background:url(../img/qcloginBack.jpg) no-repeat;
+	background-size:cover;
+}
+.login{
+	margin-top:10%;
+	margin-left:28%;
+	text-align: center;
+}
+#rember{
+	vertical-align: text-bottom;
+}

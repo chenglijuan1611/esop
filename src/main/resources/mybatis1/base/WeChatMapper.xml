@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="WeChatMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		TB_WECHATWECHAT
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		WECHATNICKNAME,
+		USERNAME,
+		NAME,	
+		REGION,	
+		GENDER,	
+		DAYOFPAYATTENTION,	
+		OPENID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{WECHATNICKNAME},
+		#{USERNAME},
+		#{NAME},		
+		#{REGION},	
+		#{GENDER},	
+		#{DAYOFPAYATTENTION},	
+		#{OPENID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			USERNAME = #{USERNAME},
+			NAME = #{NAME}
+		where 
+			WECHAT_ID = #{WECHAT_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			WECHAT_ID,
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			WECHAT_ID = #{WECHAT_ID}
+	</select>
+	
+	<!--  判断该用户信息是否已经添加过-->
+	<select id="findByOpenId" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			OPENID = #{OPENID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+			WECHAT_ID,
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 1=1
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+				<!--	根据需求自己加检索条件-->
+					WECHATNICKNAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or 
+					USERNAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					or 
+					NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+					or 
+					REGION LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%') 
+					or 
+					DAYOFPAYATTENTION LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')  
+				
+				)
+		</if>
+		<if test="pd.id!=null and pd.id!=''">
+			and GENDER LIKE CONCAT(CONCAT('%', #{pd.id}),'%')
+		</if>
+		<if test="pd.lastStart!=null and pd.lastStart!=''"><!-- 登录时间检索 -->
+			and DAYOFPAYATTENTION &gt;= #{pd.lastStart}
+		</if>
+		<if test="pd.lastEnd!=null and pd.lastEnd!=''"><!-- 登录时间检索 -->
+			and DAYOFPAYATTENTION &lt;= #{pd.lastEnd}
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+	</select>
+</mapper>

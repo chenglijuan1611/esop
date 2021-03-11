@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1,user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>send</title>
+    <style>
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow-x: auto; 
+        }
+
+        .wrapper {
+        	cursor:pointer;
+        	width: 100%;
+        	height:130%;
+        	margin-left: 2%;
+        	/*margin-top: 1%;*/
+        	overflow: hidden;
+	        position: relative;
+	        float: left;
+	        text-align: center;
+        }
+
+         .dialog {
+        	width:850px;
+        	height: 850px;
+        	position:fixed;
+        	left:28%;
+        	background-color: rgba(0, 0, 0,0.4);
+        	display: none;
+        	z-index: 999;
+        }
+
+        #cav {
+        	transform: scale(1.0, 1.0);
+        } 
+
+        #pdf-container > canvas:not(:first-child){
+        	display: none;
+   		 }
+    </style>
+    
+    <script src="pdf1.js"></script>
+    <script src="jquery.min.js"></script>
+    <link rel="stylesheet" href="bootstrap.min.css">
+</head>
+<body>
+
+	<!-- <input id="text" type="text" size=100 style="display:none;"/>
+    <button onclick="send()" style="display:none;">发送消息</button>
+    <hr/>
+    <button onclick="closeWebSocket()" style="display:none;">关闭WebSocket连接</button>
+    <hr/>
+    <div id="message" style="display:none;"></div> -->
+	
+    
+    <script>
+    window.onload = getData;
+    
+    var locationUrl = "http://"+window.location.host;
+	//console.log(locationUrl);
+	
+
+	//获得用户名
+	function getQueryString(name) {
+        var result = window.location.search.match(new RegExp(
+                "[\?\&]" + name + "=([^\&]+)", "i"));
+        if (result == null || result.length < 1) {
+            return "";
+        }
+        return result[1];
+    }
+	
+	//websocket通信
+    var websocket = null;
+	//var address = "ws://"+window.location.hostname+":8887";
+	//console.log(address);
+    //判断当前浏览器是否支持WebSocket
+    if ('WebSocket' in window) {
+        websocket = new WebSocket("ws://"+window.location.hostname+":8887");//通信服务器的IP地址
+    } else {
+        alert('当前浏览器 Not support websocket');
+    }
+
+    //连接发生错误的回调方法
+    websocket.onerror = function() {
+        setMessageInnerHTML("WebSocket连接发生错误");
+    };
+
+    //连接成功建立的回调方法
+    websocket.onopen = function() {
+        //setMessageInnerHTML("WebSocket连接成功");
+        //alert("WebSocket连接成功");
+        websocket.send('FHadminqq313596790'
+                + getQueryString('id'));
+    }
+
+    //接收到消息的回调方法
+    websocket.onmessage = function(event) {
+        //setMessageInnerHTML(event.data);
+        //alert(event.data);
+        
+    }
+    
+    //连接关闭的回调方法      
+    websocket.onclose = function() {
+        setMessageInnerHTML("WebSocket连接关闭");
+    }
+
+    //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+    window.onbeforeunload = function() {
+        closeWebSocket();
+    }
+
+    //将消息显示在网页上
+    function setMessageInnerHTML(innerHTML) {
+        document.getElementById('message').innerHTML += innerHTML + '<br/>';
+    }
+
+    //关闭WebSocket连接
+    function closeWebSocket() {
+        websocket.close();
+    }
+    
+    function getData(){
+    	var url =locationUrl + "/dafeng_mes/appuser/findMess.do?MATERIAL_CODING="+getQueryString("material_coding")+"&PRODUCTLINE_NAME="+getQueryString("id").split("-")[0];
+    	console.log(url);
+		var material_coding = getQueryString("material_coding");
+		//console.log(material_coding);
+    	$.ajax({
+		  //url: "<%=basePath%>appuser/findMess.do?MATERIAL_CODING="+material_coding+"&PRODUCTLINE_NAME="+lineName",
+		  /*url:"http://172.16.20.182:8080/dafeng_mes/appuser/findMess.do?MATERIAL_CODING=3316189C00&PRODUCTLINE_NAME=B01",*/
+		  //url:locationUrl + "/dafeng_mes/appuser/findMess.do?MATERIAL_CODING="+getQueryString("material_coding")+"&PRODUCTLINE_NAME="+getQueryString("id").split("-")[0],
+		  url:url,
+		  type: "POST",
+	      dataType:"JSON",
+	      success: function(data){
+	    	  console.log(data);
+	    	  var data_send = data.terminalMessList;
+	    	  console.log(data_send);
+	    	  //console.log(data_send.length);
+	    	 for(var i = 0;i < data_send.length;i++){
+	    		 //console.log(data_send.length);
+	    		 for(var j = 0;j < data_send[i].length;j++){
+	    			 //console.log(data_send[i][0]);
+	    			 if(data_send[i][0] == 1){
+	    				 if(data_send[i].length > 9){
+	    					 var dataNew = data_send[i].split("_");
+	    					 //console.log(dataNew[2]);			    			 
+			    		 } 
+	    			 }
+	    			 
+	    		 }
+	    		 //setMessageInnerHTML(File);
+	    		 var message = "fhadmin886"+dataNew[1]+"fhfhadmin8881_"+dataNew[2];
+		    	 //console.log(dataNew[1]);
+		    	 send(message);
+		    	 //send(dataNew[1]);
+	    	 }
+	    	 
+			} 
+    	})
+    }
+
+    //发送消息
+    //消息的格式：{content = "fhadmin886"+toUser+"fhfhadmin888" +content;}
+    function send(message) {
+        //var message = document.getElementById('text').value;
+        websocket.send(message);  
+    }
+</script>
+</body>
+</html>

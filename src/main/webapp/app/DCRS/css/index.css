@@ -1,0 +1,22 @@
+.button-circle.button-jumbo, .button-box.button-jumbo, .button-square.button-jumbo{
+	width: 100px !important;
+	height: 100px !important;
+}
+button{
+	font-size:16px !important;
+}
+.menu_content{
+	width: 500px;
+	height: 300px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	margin: auto;
+}
+.menu_button{
+	display: inline-block;
+	box-sizing: border-box;
+	margin: 10px;
+}

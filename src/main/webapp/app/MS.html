@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+     <!-- HTML页面自动清缓存 -->
+     <meta http-equiv="pragma" content="no-cache" />
+     <meta http-equiv="content-type" content="no-cache, must-revalidate"/>
+     <meta http-equiv="expires" content="Wed, 26 Feb 1997 08:21:57 GMT"/>
+
+    <title>Manage System</title>
+    <style type="text/css">
+       * {
+          margin: 0;
+          padding: 0;
+         }
+
+      html,body {
+   		width:100%;
+   		height:100%;
+   		background-color:#21232D; 
+   	 } 
+
+     
+     .header {
+         width:950px;
+		 height:50px;
+         background-color:#21232D;
+     }
+
+      .logo{
+      	width:250px; 
+     	height:50px;
+        line-height: 50px;
+        font-size:28px;
+        color:#fff;
+     }
+     #title{
+     	width:550px;
+        text-align: center;
+        line-height: 50px;
+        font-size: 32px;
+        font-weight:bolder;
+        color: #fff;
+      }
+        
+    .time {
+		width:150px;
+		color:#fff;
+		margin-left:50px;
+  	}
+
+    .content {
+       margin-top:25px;
+   }
+   	
+   	.manageSystem{
+		width:950px;
+		height:460px; 
+		text-align: center; 
+		border:thin solid #292929;
+		border-collapse: collapse;
+   	}
+   	
+   	tr:nth-child(odd){
+   		background-color:#2B2E3C;
+   	} 
+   	tr:nth-child(even){
+   		background-color:#21232D; 
+   	} 
+   	.manageSystem tr>th{
+   		height:10px;
+	   	text-align: center;
+	   	vertical-align: middle;
+	   	font-family:SourceHanSansCN-Medium;
+	   	font-weight:boder; 
+		font-size:20px;
+		color: #fff;
+		border:thin solid #292929;
+		background-color:#21232D;
+    }
+
+    .manageSystem tr>td{
+    	text-align: center;
+    	vertical-align: middle;
+		font-size:16px;
+		color: #fff;
+		border:thin solid #292929;
+    }
+
+      .info {
+	   	display: none;
+	   	width: 80%;
+	   	height: 60%;
+	   	background:rgba(0, 0, 0, 0.1);
+	   	position: absolute;
+	   	left: 50%;
+	   	top: 30%;
+	   	margin-left: -40%;
+	   	margin-top: 20%;
+	   	z-index: 999;
+	   } 
+    
+    #message {
+        	margin-top: -4%; 
+        	margin-left: 25%;
+        	vertical-align:middle;
+        	color: #FF4500;
+        	text-shadow: 1px 1px 3px red;
+        	font-size: 8.0rem;
+        	font-weight: bolder;
+        	letter-spacing: 0.8rem;
+        	opicity: 0.1;
+        }
+    
+	[v-cloak] {
+  		display: none !important;
+	}
+
+ </style>
+</head>
+<body>
+<!-- 调试用，正式用去掉 -->
+		  <!-- <div class="message" style="width:1000px;height: 200px;background-color: white;">
+    		<p id="message_websocket" style='font-size:5px;'></p>
+    	</div>
+    	<div class="message" style="width:1000px;height: 200px;background-color: red;">
+    		<p id="message_ajax" style='font-size:5px;'></p>
+    	</div>  -->
+    <div class="header">
+    	<table id="time" rules=none>
+    		<tr>
+    			<td class="logo" v-if="status == '未执行'"><img src='unexecuted.png'></img>{{status}}</td>
+        		<td class="logo" v-if="status == '生产中'"><img src='producting.png'></img>{{status}}</td>
+        		<td class="logo" v-if="status == '计划停线'"><img src='PlanShutDown.png'></img>{{status}}</td>
+        		<td class="logo" v-if="status == '停工中'"><img src='DownTime.png'></img>{{status}}</td>
+        		<td class="logo" v-if="status == '计划完成'"><img src='PlanCompleted.png'></img>{{status}}</td>
+        		<td class="logo" v-if="status == '休息中'"><img src='resting.png'></img>{{status}}</td>
+        		<td class="logo" v-if="status == '暂无计划'"><img src='noPlan.png'></img>{{status}}</td>
+    			<td class="title"><p id="title"></p></td>
+    			<td class="time" v-cloak>{{jsonArray}}</td>
+    		</tr>
+    	</table>
+    </div> 
+    <div class="content">
+          <table id="manageSystem" class="manageSystem" border="1">
+			<tr>	
+				<th class="center" style='width:80px;'>生产序号</th>
+				<th class="center" style='width:80px;'>状态</th>
+        		<th class="center">产品型号</th>
+        		<th class="center" style='width:84px;'>计划产量</th>
+        		<th class="center" style='width:84px;'>当前产量</th>
+        		<th class="center" style='width:84px;'>未完成数</th>
+        		<th class="center" style='width:84px;'>理论产量</th>
+        		<th class="center" style='width:84px;'>进度差额</th>
+        		<th class="center" style='width:120px;'>预计完成时间</th>
+			</tr>
+			<tr v-for="(plan,index) in planList" v-cloak>
+        		<td>{{index+1}}</td>
+        		<td v-if="plan.STATUS == '未执行'"><img src='unexecuted.png'></img>{{plan.STATUS}}</td>
+        		<td v-if="plan.STATUS == '生产中'"><img src='producting.png'></img>{{plan.STATUS}}</td>
+        		<td v-if="plan.STATUS == '计划停线'"><img src='PlanShutDown.png'></img>{{plan.STATUS}}</td>
+        		<td v-if="plan.STATUS == '停工中'"><img src='DownTime.png'></img>{{plan.STATUS}}</td>
+        		<td v-if="plan.STATUS == '计划完成'"><img src='PlanCompleted.png'></img>{{plan.STATUS}}</td>
+        		<td v-if="plan.STATUS == '休息中'"><img src='resting.png'></img>{{plan.STATUS}}</td>
+        		<td v-if="plan.STATUS == '暂无计划'"><img src='noPlan.png'></img>{{plan.STATUS}}</td>
+        		<td >{{plan.invStd.slice(0,15)}}<br>{{plan.invStd.slice(16,31)}}</td>
+        		<td>{{plan.PLAN_AMOUNT}}</td>
+        		<td>{{plan.PRODUCT_AMOUNT}}</td>
+        		<td>{{plan.PLAN_AMOUNT-plan.PRODUCT_AMOUNT}}</td>
+        		<td>{{plan.theoryCount}}</td>
+        		<td>{{plan.PRODUCT_AMOUNT-plan.theoryCount}}</td>
+        		<td>{{plan.PLAN_RESERVE}}</td>
+        	</tr>
+        	<tr>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+				<td></td>
+        	</tr>
+        	<tr>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+				<td></td>
+        	</tr>
+        	<tr>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+				<td></td>
+        	</tr>
+        	<tr>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+				<td></td>
+        	</tr>
+        	<tr>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+				<td></td>
+        	</tr>
+        	<tr>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+        		<td></td>
+				<td></td>
+        	</tr>
+		</table>
+    </div>  
+    <div class='info'>
+    	<div id='message'>
+    	</div>
+    </div> 
+<script src="echarts.js"></script>
+<script src="vue.js"></script>
+<script src="jquery.min.js"></script>
+<script src="bootstrap.min.js"></script>
+<script>
+function getQueryString(name) {
+    var result = window.location.search.match(new RegExp(
+            "[\?\&]" + name + "=([^\&]+)", "i"));
+    if (result == null || result.length < 1) {
+        return "";
+    }
+    return result[1];
+}
+
+//---------------心跳包-----------------------
+//var userId=$("#userId").val();
+var lockReconnect = false;  //避免ws重复连接
+var ws = null;          // 判断当前浏览器是否支持WebSocket
+var wsUrl = "ws://"+window.location.hostname+":8887";
+createWebSocket(wsUrl);   //连接ws
+
+function createWebSocket(url) {
+    try{
+         if('WebSocket' in window){
+            ws = new WebSocket(url);
+        }else if('MozWebSocket' in window){  
+            ws = new MozWebSocket(url);
+        }else{
+            console.log("你的浏览器不支持WEBSOCKET");
+        } 
+        initEventHandle();
+    }catch(e){
+        reconnect(url);
+        console.log(e);
+    }     
+}
+
+function initEventHandle() {
+    ws.onclose = function () {
+        reconnect(wsUrl);
+        console.log("llws连接关闭!"+new Date().toUTCString());
+    };
+    ws.onerror = function () {
+        reconnect(wsUrl);
+        console.log("llws连接错误!");
+    };
+    ws.onopen = function () {
+    	ws.send('FHadminqq313596790' + getQueryString('code'));
+        heartCheck.reset().start();      //心跳检测重置
+        console.log("llws连接成功!"+new Date().toUTCString());
+        //ws.send('FHadminqq313596790' + getQueryString('id'));
+    };
+
+    var DataLast = ""; 
+    ws.onmessage = function (event) {    //如果获取到消息，心跳检测重置	 
+        var Data_received = event.data;
+		//console.log(Data_received);
+		if(Data_received.indexOf("showLineStatus") != -1){
+			var DataNew = Data_received.split("+++++");
+			//console.log(DataNew);
+			//console.log(DataNew[0]);
+			//console.log(DataNew[1]);
+			if(DataNew[0] == "showLineStatus"){
+				var json_data = eval('('+DataNew[1]+')'); 
+				//console.log(json_data.status);
+				//console.log(json_data.planList);
+				//console.log(json_data.jsonArray);
+				time.status = json_data.status;
+	        	manageSystem.planList = json_data.planList;
+	        	//console.log(json_data.jsonArray[0].time);
+	        	timer1 = json_data.jsonArray[0].time;
+			}
+		}
+        heartCheck.reset().start();      //拿到任何消息都说明当前连接是正常的
+        //console.log("llws收到消息啦:" +event.data); 
+	}
+}
+// 监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+/* window.onbeforeunload = function() {
+    ws.close();
+} */  
+window.onbeforeunload = function() {
+    closeWebSocket();
+}
+
+//关闭WebSocket连接
+function closeWebSocket() {
+    ws.close();
+}
+
+function reconnect(url) {
+    if(lockReconnect) return;
+    lockReconnect = true;
+    setTimeout(function () {     //没连接上会一直重连，设置延迟避免请求过多
+        createWebSocket(url);
+        lockReconnect = false;
+    }, 2000);
+}
+
+//心跳检测
+var heartCheck = {
+    timeout: 540000,        //9分钟发一次心跳
+    timeoutObj: null,
+    serverTimeoutObj: null,
+    reset: function(){
+        clearTimeout(this.timeoutObj);
+        clearTimeout(this.serverTimeoutObj);
+        return this;
+    },
+    start: function(){
+        var self = this;
+        this.timeoutObj = setTimeout(function(){
+            //这里发送一个心跳，后端收到后，返回一个心跳消息，
+            //onmessage拿到返回的心跳就说明连接正常
+            ws.send("ping");
+            console.log("ping!");
+            self.serverTimeoutObj = setTimeout(function(){//如果超过一定时间还没重置，说明后端主动断开了
+                ws.close();     //如果onclose会执行reconnect，我们执行ws.close()就行了.如果直接执行reconnect 会触发onclose导致重连两次
+            }, self.timeout)
+        }, this.timeout)
+    }
+}
+
+var urlHeader ='http://' + window.location.host;     
+var timer, timer1, beat,start_time,nowTime1,code;
+var name = new Object();
+var code = getQueryString("code").split("-")[0];
+var first = '1';
+
+function getData() {
+	//console.log('hhhhhhhhhhhhhhhhhhhhh');
+	//console.log(code);
+    $.ajax({
+        url:urlHeader+"/dafeng_mes/plan3/showLineStatus?date="+new Date().getTime(),
+        type:'POST',
+        data:{CODE: code},
+        //dataType: 'json',
+        //scriptCharset: 'UTF-8',
+        success: function(data) {
+        	//console.log('hhhhhhaaaaaaaaahhhhhh');
+        	/* time.status = data.status;
+        	manageSystem.planList = data.planList; */
+        }	
+    })
+} 
+
+$(function() {
+    getData(); 
+    var workTime;
+    function getWorkTime() {
+        //console.log('==================='+code);
+    	 $.ajax({
+		        url:urlHeader+"/dafeng_mes/plan3/getWorkTime?CODE="+code+"&tm="+new Date().getTime(),
+		        type:'POST',
+		        data:{CODE: code},
+		        dataType: 'json',
+		        //scriptCharset: 'UTF-8',
+		        success: function(data) { 
+		        	workTime = data;
+		        	//console.log(workTime);
+		        }	
+		    })
+    }
+    getWorkTime();
+    
+  //flag = "1"表示还没有弹框
+    var flag = '1'; 
+    function setTime() {
+    	 timer1 += 1000;
+    	 timer = new Date(timer1);
+    	 var hours = (timer.getHours() / 10) >= 1 ? timer.getHours() : '0' + timer.getHours(); 
+         var minutes = (timer.getMinutes() / 10) >= 1 ? timer.getMinutes() : '0' + timer.getMinutes();
+         var seconds = (timer.getSeconds() / 10) >= 1 ? timer.getSeconds() : '0' + timer.getSeconds();
+         time.jsonArray = timer.getFullYear() + '年' + (timer.getMonth() + 1) + '月' + timer.getDate()+ '日 ' + hours + ':' + minutes + ':' + seconds;
+   		 nowTime1 = hours + ':' + minutes + ':' + seconds;
+   		 //b=1代表为休息时间
+   		 var b;
+		 for(var i = 0;i<workTime[1].length;i++){
+			 if(nowTime1 >= workTime[1][i].STARTTIME && nowTime1 <= workTime[1][i].ENDTIME){
+				 b = "1";
+				 break;
+			 }else{
+				 b = "0";
+			 }
+		 }
+		 if(b == "1"){
+			 if(flag == '1'){
+					//console.log(flag);
+			        $('.info').show('fast',function(){
+		        		 document.getElementById('message').innerHTML = '休息中';			    
+		        	});
+			        flag = '0';
+			        //console.log(flag);
+    			}
+		 }else{
+			if(flag == '0'){
+				$('.info').hide();
+		        flag = '1';
+   			}
+		 }
+    }
+    setInterval(setTime, 1000); 
+})  
+
+
+
+document.getElementById('title').innerHTML ="达峰生产" +getQueryString("code").split('-')[0]+"线可视化管理系统";
+	var time = new Vue({
+    		el:"#time",
+    		data(){
+    			 return{
+       		         status:{}, 
+            		 jsonArray:{}
+       		      }
+    		},
+    		/*  created(){
+    			fetch('http://'+window.location.host+"/dafeng_mes/plan2/showStatusByLine?CODE="+getQueryString("code")+"&date="+new Date().getTime())
+    			.then(response => response.json())
+    			.then(json => {
+    				this.jsonArray = json.jsonArray;
+    				this.status = json.status;
+    				//console.log(this.status);
+    			});
+    		}, */
+    	})
+
+      var manageSystem = new Vue({
+  		el:"#manageSystem",
+  		data:{
+  			planList:[],		
+  		},
+  		/*    created(){
+  			fetch('http://'+window.location.host+"/dafeng_mes/plan2/showStatusByLine?CODE="+getQueryString("code")+"&date="+new Date().getTime())
+  			.then(response => response.json())
+  			.then(json => {
+  				this.planList = json.planList;
+  	  				console.log(this.planList);
+  	  				console.log(this.planList[0].PLAN_RESERVE);
+  	  				console.log(this.planList[0].PLAN_RESERVE.split('.')[0]);
+  			});
+  		}, */
+  	})
+    </script>  
+</body>
+</html>

@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ProcessFileManagerMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		BASE_PROCESSFILEMANAGER
+	</sql>
+	<sql id="productTable">
+		BASE_PRODUCT
+	</sql>
+	<!-- 字段 -->
+	<sql id="Field">
+		PROCESS_CODING,	
+		PROCESS_NAME,	
+		PRODUCT_CODING,	
+		OPERATION_TIME,	
+		OPERATION_PERSON,	
+		PROCESSFILEMANAGER_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{PROCESS_CODING},	
+		#{PROCESS_NAME},	
+		#{PRODUCT_CODING},	
+		#{OPERATION_TIME},	
+		#{OPERATION_PERSON},	
+		#{PROCESSFILEMANAGER_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PROCESSFILEMANAGER_ID = #{PROCESSFILEMANAGER_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			PROCESS_CODING = #{PROCESS_CODING},
+			PROCESS_NAME = #{PROCESS_NAME},
+			PRODUCT_CODING = #{PRODUCT_CODING},
+			PRODUCT_NAME = #{PRODUCT_NAME},
+			PRODUCT_SPECIFICATIONS = #{PRODUCT_SPECIFICATIONS},
+			OPERATION_TIME = #{OPERATION_TIME},
+			OPERATION_PERSON = #{OPERATION_PERSON},
+		PROCESSFILEMANAGER_ID = PROCESSFILEMANAGER_ID
+		where 
+		PROCESSFILEMANAGER_ID = #{PROCESSFILEMANAGER_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		a.PROCESS_CODING,	
+		a.PROCESS_NAME,	
+		a.PRODUCT_CODING,
+		a.OPERATION_TIME,	
+		a.OPERATION_PERSON,
+		a.PROCESSFILEMANAGER_ID,
+		b.PRODUCT_NAME,
+		b.PRODUCT_SPECIFICATIONS
+		from 
+		<include refid="tableName"></include>
+		a,
+		<include refid="productTable"></include>
+		b
+		where a.PRODUCT_CODING=b.PRODUCT_CODE
+		and
+		a.PROCESSFILEMANAGER_ID = #{PROCESSFILEMANAGER_ID}
+	</select>
+	
+	<!-- 通过用户编码查找用户姓名 -->
+	<select id="findName" parameterType="pd" resultType="pd">
+		select 
+		NAME
+		from 
+		sys_user
+		where
+		USERNAME = #{username}
+	</select>
+	
+	<!-- //在工艺表里查找该物料是否已有所属工艺 -->
+	<select id="findByMaterialCode" parameterType="pd" resultType="pd">
+		select 
+		* 
+		from 
+		<include refid="tableName"></include>
+		where
+		PRODUCT_CODING = #{materialCode}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select 
+		a.PROCESS_CODING,	
+		a.PROCESS_NAME,	
+		a.PRODUCT_CODING,	
+		a.OPERATION_TIME,	
+		a.OPERATION_PERSON,	
+		a.PROCESSFILEMANAGER_ID,
+		b.PRODUCT_NAME,
+		b.PRODUCT_SPECIFICATIONS
+		from 
+		<include refid="tableName"></include>
+		a,
+		<include refid="productTable"></include>
+		b
+		where a.PRODUCT_CODING=b.PRODUCT_CODE
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					a.PROCESS_CODING LIKE '%'+#{pd.keywords}+'%'
+					or
+					a.PROCESS_NAME LIKE '%'+#{pd.keywords}+'%'
+					or
+					a.PRODUCT_CODING LIKE '%'+#{pd.keywords}+'%'
+					or
+					b.PRODUCT_NAME LIKE '%'+#{pd.keywords}+'%'
+					or
+					b.PRODUCT_SPECIFICATIONS LIKE '%'+#{pd.keywords}+'%'
+					or
+					a.OPERATION_PERSON LIKE '%'+#{pd.keywords}+'%'
+					
+				<!--	根据需求自己加检索条件
+					字段1 LIKE '%'+ #{pd.keywords}+'%'
+					 or 
+					字段2 LIKE '%'+ #{pd.keywords}+'%' 
+				-->
+				)
+		</if>
+		<if test="pd.lastStart!=null and pd.lastStart!=''">
+			and a.OPERATION_TIME &gt;= #{pd.lastStart}
+		</if>
+		<if test="pd.lastEnd!=null and pd.lastEnd!=''">
+			and a.OPERATION_TIME &lt;= #{pd.lastEnd}
+		</if>
+		order by OPERATION_TIME desc
+	</select>
+	<!-- 通过PROCESS_CODING获取数据 -->
+	<select id="findByCode" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		where
+		PROCESS_CODING = #{PROCESS_CODING}
+	</select>
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select 
+		a.PROCESS_CODING,	
+		a.PROCESS_NAME,	
+		a.PRODUCT_CODING,	
+		a.OPERATION_TIME,	
+		a.OPERATION_PERSON,	
+		a.PROCESSFILEMANAGER_ID,
+		b.PRODUCT_NAME as PRODUCT_NAME,
+		b.PRODUCT_SPECIFICATIONS as PRODUCT_SPECIFICATIONS
+		from 
+		<include refid="tableName"></include>
+		a,
+		<include refid="productTable"></include>
+		b
+		where a.PRODUCT_CODING=b.PRODUCT_CODE
+		<if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					a.PROCESS_CODING LIKE '%'+#{keywords}+'%'
+					or
+					a.PROCESS_NAME LIKE '%'+#{keywords}+'%'
+					or
+					a.PRODUCT_CODING LIKE '%'+#{keywords}+'%'
+					or
+					b.PRODUCT_NAME LIKE '%'+#{keywords}+'%'
+					or
+					b.PRODUCT_SPECIFICATIONS LIKE '%'+#{keywords}+'%'
+					or
+					a.OPERATION_PERSON LIKE '%'+#{keywords}+'%'
+					
+				<!--	根据需求自己加检索条件
+					字段1 LIKE '%'+ #{pd.keywords}+'%'
+					 or 
+					字段2 LIKE '%'+ #{pd.keywords}+'%' 
+				-->
+				)
+		</if>
+		<if test="lastStart!=null and lastStart!=''">
+			and a.OPERATION_TIME &gt;= #{lastStart}
+		</if>
+		<if test="lastEnd!=null and lastEnd!=''">
+			and a.OPERATION_TIME &lt;= #{lastEnd}
+		</if>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PROCESSFILEMANAGER_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- rhz -->
+</mapper>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>线头看板</title>
+		<link rel="stylesheet" type="text/css" href="bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="lineHead.css"/>
+		<style>
+			html,body{
+		        width: 100%;
+		        height: 100%;
+		        background: #111111;
+		        opacity:0.9;
+		    }  
+		</style>
+	</head>
+	<body>
+		<div class="main">
+			<div class="pageTitle">
+				<div class="title"><span>&nbsp;B1&nbsp;线&nbsp;生&nbsp;产&nbsp;看&nbsp;板</span></div>
+				<div class="time"><span class="currentTime" id="currentTime">2019年10月25日</span></div>				
+			</div>
+			<div class="leaderInfo">
+				<div class="photo infoItem"></div>
+				<div class="nameMark infoItem" style="background: #08979c;">姓名</div>
+				<div class="name infoItem"></div>
+				<div class="jobMark infoItem" style="background: #08979c;">职务</div>
+				<div class="job infoItem"></div>
+				<div class="phoneMark infoItem" style="background: #08979c;">手机</div>
+				<div class="phone infoItem"></div>
+				<div class="IEMark infoItem" style="background: #08979c;">IE</div>
+				<div class="IE infoItem"></div>
+			</div>
+			<div class="topDiv">
+				<div class="productionTable">
+					<div class="currentProducting">
+						<div class="animate animated"></div>
+						<div class="productionContent"><span>正在生产:&nbsp;&nbsp;</span><span class="productionName"></span></div>						
+					</div>
+					<div class="tableArea">
+						<table class="table table-bordered">
+							<tr>
+								<td style="width:12%;color:;background: #612500;">产品编码</td>
+								<td class="productionNameCode"></td>
+								<td style="width:12%;color:;background: #612500;">ICT</td>
+								<td class="ICTTime"></td>
+								<td style="color:;background: #612500;">计划节拍</td>
+								<td class="productBeat"></td>								
+							</tr>
+							<tr>
+								<td style="color:;background: #612500;">计划数量</td>
+								<td class="planAmount"></td>
+								<td style="color:;background: #612500;">FCT</td>
+								<td class="FCTTime"></td>
+								<td style="width:12%;color:;background: #612500;">实际节拍</td>
+								<td class="planBeat"></td>							
+							</tr>
+							<tr>
+								<td style="color:;background: #612500;">生产数量</td>
+								<td class="actualAmount"></td>
+								<td style="color:;background: #612500;">AOI</td>
+								<td class="AOITime"></td>
+								<td style="color:;background: #612500;">开工时间</td>
+								<td class="startTime"></td>
+							</tr>
+							<tr>
+								<td style="color:;background: #612500;">生产效率</td>
+								<td class="productiveness"></td>								
+								<td style="color:;background: #612500;">包装</td>
+								<td class="baozhaungTime"></td>
+								<td style="color:;background: #612500;">结束时间</td>
+								<td class="endTime"></td>								
+							</tr>
+						</table>
+					</div>	
+				</div>
+				<div class="throughRate" id="rateChart">
+						
+				</div>
+			</div>
+			<div class="bottomDiv">
+				<div class="bottomLeftDiv" id="eachZhuChart">
+				
+				</div>
+				<div class="bottomRightDiv" id="allBingChart">
+				
+				</div>
+			</div>		
+		</div>
+
+	<script src="jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="echarts.js" type="text/javascript" charset="utf-8"></script>
+	<script src="lineHead.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+</html>

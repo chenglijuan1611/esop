@@ -1,0 +1,59 @@
+{
+	"contents":{
+		"info":{													
+			"name":"张真真",
+			"photoUrl":"",																							
+			"job":"B1线长",
+			"phone":"13354038890",
+			"IE":"苏玮",																								
+			"serverTime":1572052656																												
+		},
+		"currentProduction":{
+			"productionName":"尼得科变频滚筒洗衣机S102-GENV(东芝方案-英飞凌模块",		
+			"productionNameCode":"3242900530",											
+			"planAmount":"5000",														
+			"actualAmount":"4500",														
+			"productBeat":"12",															
+			"ICTTime":"2",																
+			"FCTTime":"3",																
+			"AOITime":"4",																
+			"baozhaungTime":"5",														
+			"planBeat":"11",															
+			"startTime":"9:00",															
+			"endTime":"10:00",															
+			"productiveness":"100%",													
+			"throughRate":99															
+		},
+		"eachProdProgress":[															
+			{
+				"productionName": "大东OS-318", 										
+				"plan": 5000, 															
+				"actual": 1000															
+			},
+			{
+				"productionName": "尼得科",
+				"plan": 3000, 
+				"actual": 1500
+			},
+			{
+				"productionName": "海信38", 
+				"plan": 1000, 
+				"actual": 100
+			},
+			{
+				"productionName": "松下", 
+				"plan": 900, 
+				"actual": 100
+			}	,
+			{
+				"productionName": "润津", 
+				"plan": 6000, 
+				"actual": 2500
+			}
+		],
+		"lineTotalProgress":{															
+			"finished":3000,															
+			"unfinished":2000															
+		}
+	}
+}

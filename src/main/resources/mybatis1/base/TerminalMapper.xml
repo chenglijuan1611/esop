@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TerminalMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		BASE_TERMINAL
+	</sql>
+	<sql id="lineTable">
+	 	BASE_PRODUCTLINE
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		TERMINAL_CODE,	
+		TERMINAL_NAME,	
+		LOCATION,	
+		DEPLOY_LINE,	
+		TERMINAL_TYPE,	
+		REGISTER_DATE,	
+		SCREEN_WIDE,	
+		SCREEN_HEIGHT,	
+		SHOW_NUM,	
+		FILE_PAGENUM,	
+		TERMINAL_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{TERMINAL_CODE},	
+		#{TERMINAL_NAME},	
+		#{LOCATION},	
+		#{DEPLOY_LINE},	
+		#{TERMINAL_TYPE},	
+		#{REGISTER_DATE},	
+		#{SCREEN_WIDE},	
+		#{SCREEN_HEIGHT},	
+		#{SHOW_NUM},	
+		#{FILE_PAGENUM},	
+		#{TERMINAL_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TERMINAL_ID = #{TERMINAL_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			TERMINAL_CODE = #{TERMINAL_CODE},
+			TERMINAL_NAME = #{TERMINAL_NAME},
+			LOCATION = #{LOCATION},
+			DEPLOY_LINE = #{DEPLOY_LINE},
+			TERMINAL_TYPE = #{TERMINAL_TYPE},
+			REGISTER_DATE = #{REGISTER_DATE},
+			SCREEN_WIDE = #{SCREEN_WIDE},
+			SCREEN_HEIGHT = #{SCREEN_HEIGHT},
+			SHOW_NUM = #{SHOW_NUM},
+			FILE_PAGENUM = #{FILE_PAGENUM},
+		TERMINAL_ID = TERMINAL_ID
+		where 
+		TERMINAL_ID = #{TERMINAL_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			TERMINAL_ID = #{TERMINAL_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		a.TERMINAL_CODE,	
+		a.TERMINAL_NAME,	
+		a.LOCATION,	
+		a.DEPLOY_LINE,	
+		a.TERMINAL_TYPE,	
+		a.REGISTER_DATE,	
+		a.SCREEN_WIDE,	
+		a.SCREEN_HEIGHT,	
+		a.SHOW_NUM,	
+		a.FILE_PAGENUM,	
+		a.TERMINAL_ID,
+		b.NAME,
+		b.CODE
+		from
+		<include refid="tableName"></include>
+		a,
+		<include refid="lineTable"></include>
+		b
+		where a.DEPLOY_LINE = b.CODE
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+				TERMINAL_CODE LIKE '%'+#{pd.keywords}+'%'
+				or
+				TERMINAL_NAME LIKE '%'+#{pd.keywords}+'%'
+				or
+				LOCATION LIKE '%'+#{pd.keywords}+'%'
+				or 
+				DEPLOY_LINE LIKE '%'+#{pd.keywords}+'%'
+				or
+				TERMINAL_TYPE LIKE '%'+#{pd.keywords}+'%'
+				or 
+				REGISTER_DATE LIKE '%'+#{pd.keywords}+'%' 
+				or
+				SCREEN_WIDE LIKE '%'+#{pd.keywords}+'%'
+				or
+				SCREEN_HEIGHT LIKE '%'+#{pd.keywords}+'%'
+				or
+				SHOW_NUM LIKE '%'+#{pd.keywords}+'%'
+				
+				<!--	根据需求自己加检索条件
+					字段1 LIKE '%'+ #{pd.keywords}+'%'
+					 or 
+					字段2 LIKE '%'+ #{pd.keywords}+'%' 
+				-->
+				)
+		</if>
+		<if test="pd.lineName != null and pd.lineName != ''"><!-- 角色检索 -->
+			and DEPLOY_LINE=#{pd.lineName}
+		</if>
+		<if test="pd.lastStart!=null and pd.lastStart!=''"><!-- 登录时间检索 -->
+			and REGISTER_DATE &gt;= #{pd.lastStart}
+		</if>
+		<if test="pd.lastEnd!=null and pd.lastEnd!=''"><!-- 登录时间检索 -->
+			and REGISTER_DATE &lt;= #{pd.lastEnd}
+		</if>
+		order by a.TERMINAL_CODE,CONVERT(SHOW_NUM,SIGNED)
+	</select>
+	
+	<!-- 根据产品查询在所有终端和页码 -->
+	<select id="listTerAndPage" parameterType="pd" resultType="pd">
+		select
+			a.TERMINAL_CODE,
+			b.PAGE
+		from 
+			base_terminal a left join base_stationpagesave b
+		on 
+			a.TERMINAL_CODE = b.TERMINAL and a.TERMINAL_TYPE = '工艺文件显示终端' and  PRODUCT_CODE = #{PRODUCT_CODE} 
+		order by a.TERMINAL_CODE,CONVERT(SHOW_NUM,SIGNED)
+		
+	</select>
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 1=1    
+		<if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+				TERMINAL_CODE LIKE '%'+#{keywords}+'%'
+				or
+				TERMINAL_NAME LIKE '%'+#{keywords}+'%'
+				or
+				LOCATION LIKE '%'+#{keywords}+'%'
+				or 
+				TERMINAL_TYPE LIKE '%'+#{keywords}+'%'
+				or 
+				SCREEN_WIDE LIKE '%'+#{keywords}+'%'
+				or
+				SCREEN_HEIGHT LIKE '%'+#{keywords}+'%'
+				or
+				SHOW_NUM LIKE '%'+#{keywords}+'%'
+				
+				<!--	根据需求自己加检索条件
+					字段1 LIKE '%'+ #{pd.keywords}+'%'
+					 or 
+					字段2 LIKE '%'+ #{pd.keywords}+'%' 
+				-->
+				)
+		</if>
+		<if test="lineName != null and lineName != ''"><!-- 角色检索 -->
+			and DEPLOY_LINE=#{lineName}
+		</if>
+		<if test="lastStart!=null and lastStart!=''"><!-- 登录时间检索 -->
+			and REGISTER_DATE &gt;= #{lastStart}
+		</if>
+		<if test="lastEnd!=null and lastEnd!=''"><!-- 登录时间检索 -->
+			and REGISTER_DATE &lt;= #{lastEnd}
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAllAgo" parameterType="pd" resultType="pd">
+		select cast(count(*) as varchar)as zs
+		from 
+		<include refid="tableName"></include>
+		where 1=1    
+		<if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+				TERMINAL_CODE LIKE '%'+#{keywords}+'%'
+				or
+				TERMINAL_NAME LIKE '%'+#{keywords}+'%'
+				or
+				LOCATION LIKE '%'+#{keywords}+'%'
+				or 
+				TERMINAL_TYPE LIKE '%'+#{keywords}+'%'
+				or 
+				SCREEN_WIDE LIKE '%'+#{keywords}+'%'
+				or
+				SCREEN_HEIGHT LIKE '%'+#{keywords}+'%'
+				or
+				SHOW_NUM LIKE '%'+#{keywords}+'%'
+				
+				<!--	根据需求自己加检索条件
+					字段1 LIKE '%'+ #{pd.keywords}+'%'
+					 or 
+					字段2 LIKE '%'+ #{pd.keywords}+'%' 
+				-->
+				)
+		</if>
+		<if test="lineName != null and lineName != ''"><!-- 角色检索 -->
+			and DEPLOY_LINE=#{lineName}
+		</if>
+		<if test="lastStart!=null and lastStart!=''"><!-- 登录时间检索 -->
+			and REGISTER_DATE &gt;= #{lastStart}
+		</if>
+		<if test="lastEnd!=null and lastEnd!=''"><!-- 登录时间检索 -->
+			and REGISTER_DATE &lt;= #{lastEnd}
+		</if>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TERMINAL_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 通过TERMINAL_CODE获取数据 -->
+	<select id="findByCode" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		where
+		TERMINAL_CODE = #{TERMINAL_CODE}
+	</select>
+	
+	<!-- 通过TERMINAL_CODE获取数据 -->
+	<select id="findByName" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		where
+		TERMINAL_NAME = #{TERMINAL_NAME}
+	</select>
+	
+	<!-- 通过产线和终端显示序号获取数据 -->
+	<select id="findByNum" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		where
+		SHOW_NUM = #{showNum} and DEPLOY_LINE = #{lineName}
+	</select>
+	
+	<!-- listTerminalType -->
+	<!-- 查询出已有的终端类型信息 -->
+	<select id="listTerminalType" parameterType="pd" resultType="pd">
+		select
+			*
+		from
+			BASE_TERMINALTYPE
+	</select>
+	
+
+	<!-- 根据产线查询出该产线最大的显示序号 -->
+	<select id="findPageByLine" parameterType="pd" resultType="pd">
+		declare @lineCode nvarchar(20)    
+		set @lineCode = #{PRODUCTLINE_NAME} 
+		select  dbo.show_maxNum(@lineCode ) as maxShowNum
+	</select>
+	<!-- rhz -->
+</mapper>

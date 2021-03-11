@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>数据采集登记系统</title>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/index.css"/>
+		<link rel="stylesheet" type="text/css" href="css/buttons.css"/>
+		<link rel="stylesheet" type="text/css" href="css/common.css"/>
+	</head>
+	<body>
+		<input type="hidden" class="userName">
+		<input type="hidden" class="userID">
+		<header>
+			<div class="logo header_item">
+				<img src="img/logo.png" width="50">
+			</div>
+			<div class="title header_item">
+				达峰智能点检系统
+			</div>
+			<div class="noScreen header_item">
+				<a href="javascript:void(0)" onclick="exitScreen()" style="font-size:small;color: #000;">退出全屏</a>
+			</div>
+			<div class="fullScreen header_item">
+				<a href="javascript:void(0)" onclick="fullScreen()"><img alt="" src="img/full.jpg" height="20"></a>
+			</div>
+			<div class="exit header_item">
+				<a href="javascript:void(0)" onclick="exit()">退出</a>
+			</div>
+			<div class="user header_item">
+				<span style="margin-right: 5px;" id="">欢迎</span><span id="user"></span>
+			</div>		
+		</header>
+		<div class="menu_content">
+			<div class="topFourBtn">
+			<div class="oneMenu menu_button">
+				<button class="button button-3d  button-circle button-jumbo button-primary" onclick="jumpToDianjian()">设备点检</button>
+			</div>
+			<div class="twoMenu menu_button">
+				<button class="button button-3d  button-circle button-jumbo button-primary" onclick="jumpToXunjian()">设备巡检</button>
+			</div>
+			<div class="threeMenu menu_button">
+				<button class="button button-3d  button-circle button-jumbo button-primary" onclick="jumpToShouJianDengJi()">首检登记</button>
+			</div>
+			<div class="fourMenu menu_button">
+				<button class="button button-3d  button-circle button-jumbo button-primary" onclick="jumpToShouJianQueRen()">首检确认</button>
+			</div>
+			</div>
+			<div class="bottomFourBtn">
+			<div class="fiveMenu menu_button">
+				<button class="button button-3d  button-circle button-jumbo button-primary" onclick="jumpToJiankongjilu()">监控记录</button>
+			</div>
+			<div class="sixMenu menu_button">
+				<button class="button button-3d  button-circle button-jumbo button-primary" onclick="jumpToJiankongchaxun()">监控查询</button>
+			</div>
+			<div class="sevenMenu menu_button">
+				<button class="button button-3d  button-circle button-jumbo button-primary">SPC管理图</button>
+			</div>
+			<div class="eightMenu menu_button">
+				<button class="button button-3d  button-circle button-jumbo button-primary">铜/铅控制图</button>
+			</div>
+			</div>			
+		</div>
+	</body>
+	<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/common.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/index.js" type="text/javascript" charset="utf-8"></script>
+</html>

@@ -1,0 +1,92 @@
+html{
+    height: 100%;
+    width: 100%;
+    position:fixed;
+    background:#222d32;
+}
+body {
+    overflow:hidden;
+    background:#222d32;
+} 
+.login-page{
+	padding-top:100px;
+	width:100%;
+	height:800px;
+	overflow:hidden;
+	background:#222d32;
+}
+.login-box-msg,.login-logo,.icheck>label{
+	color:#fff;
+}
+.login-box-body{
+	border-radius:10px;
+	background:rgba(0,0,0,0);
+}
+.btn.btn-flat {
+	border:1px solid #fff;
+	color:#000;
+	border-radius:5px;
+	background:#fff;	
+}
+.form-control{
+	border-radius:5px;
+}
+#subBtn:active{
+	outline:none;
+}
+.myAlert{
+		display: none;
+		position: absolute;
+		z-index:99999;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		margin: auto;
+		width: 250px;
+		height:100px;
+		border: 1px solid #222d32;
+		border-radius: 5px;
+		background: #fff;		
+	}
+	.alert-title{
+		width: 248px;
+		height: 30px;
+		line-height: 30px;
+		background: #222d32;
+		color: #fff;
+		border: 1px solid #fff;
+		border-bottom: 1px solid #222d32;
+		border-top-left-radius: 5px;
+		border-top-right-radius: 5px;
+		font-size: small;
+		padding-left: 5px;
+	}
+	.alert-content{
+		width: 250px;
+		height: 35px;
+		padding: 10px;
+	}
+	.alert-btn{
+		width: 250px;
+		height: 25px;
+		line-height: 25px;
+		text-align: right;
+		padding-right: 5px;
+	}
+	.footerBtn{
+		width: 50px;
+		height: 30px;		
+		font-size: small;
+		background:#222d32;
+		border-radius: 5px;
+		color: #fff;
+		border: none;
+		outline: none;
+	}
+	.footerBtn:active{
+		outline: none;
+	}
+	.footerBtn:focus{
+		outline: none;
+	}	

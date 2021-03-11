@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Panasonic Product Line</title>
+    <script src="jquery.min.js"></script>
+    <script src="echarts.js"></script>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;                                                                                                                                                                                                  
+        }
+        html {
+            font-size: 100px;
+        } 
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: Arial, Helvetica, sans-serif;
+        }  
+        [class*="col-"] {
+            padding: 0;    
+        }
+        /* 页面头部样式 */
+        .productLine_head {
+            width: 98%;
+            margin-top: 0.55rem;
+        }
+        .Logo_left {
+        	margin-left: 0.2rem;
+            width: 70%;
+        }
+        .Logo_right {
+        	margin-top: -0.08rem;
+            width: 80%;
+        }
+        /* 页面主体内容样式 */
+        .productLine_main {
+            width: 98%;
+        }
+        .productLine_main ul {
+            list-style: none;
+            margin: 0;
+        }
+        /* 线别样式 */
+        .line_name strong {
+            display: block;
+            margin-left:10px;
+            width: 98%;
+            background-color: blue;
+            color: white;
+            text-indent: 0.1rem;
+            font-size: 0.55rem;
+            font-weight: bolder;
+        }
+        .line_name strong span {
+            display: inline-block;
+            font-size: 0.55rem;
+            font-weight: bolder;
+        } 
+        .machine_type strong {
+            display: block;
+            background-color: blue;
+            text-indent: 0.1rem;
+            width: 100%;
+            color: white;
+            font-size: 0.55rem;
+            font-weight: bolder;
+        }
+        .machine_type strong span{
+            display: inline-block;
+            font-size: 0.55rem;
+            font-weight: bolder;
+        }
+        /* 生产线样式 */
+        .product_plan {
+            margin-top: 0.15rem;
+            margin-bottom: 0.15rem;
+        }
+        /* 左侧样式 */
+        .product_plan .plan_type .plan_each li{
+            width: 100%;
+            padding: 0.2rem 0;
+            margin-bottom: 1px;
+            text-align: center;
+            font-size: 0.55rem;
+            font-weight: bolder;
+            background-color: #95b3d7;
+        }
+        /* 中间样式 */ 
+        .data_detail .data_each li{
+            width: 100%;
+            padding: 0.2rem 0;
+            margin-left: 1px;
+            margin-bottom: 1px;
+            text-align: center;
+            font-size: 0.55rem;
+            font-weight: bolder;
+            background-color: #95b3d7;
+        }
+        /* 右侧样式  */ 
+        
+        .chart_each {
+            width: 96%;
+            height: 94%;
+            font-size: 0.16rem;
+            margin-left: 15px;
+            margin-top: 5%;
+        }
+        /* 时间显示样式 */
+        .foot_time {
+            text-align: center;
+            background-color: blue;
+            padding: 1px 0;
+            color: white;
+            font-size: 0.55rem;
+            font-weight: bolder;
+            letter-spacing: 10px;
+        }
+        /* 通知 */
+        .info {
+        	display: none;
+        	width: 80%;
+        	height: 40%;
+        	background:rgba(0, 0, 0, 0.4); 
+        	position: absolute;
+        	left: 50%;
+        	top: 30%;
+        	margin-left: -40%;
+        	z-index: 999;
+        }
+        .message {
+        	margin-top: 4%;
+        	color: orange;
+        	text-shadow: 1px 1px 3px red;
+        	font-size: 1.8rem;
+        	font-weight: bolder;
+        	letter-spacing: 0.8rem;
+        	opicity: 0.3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container productLine_head">
+        <div class="row">
+            <div class="col-lg-5 col-md-5 col-sm-5  text-left lineHead_left">
+                <img src="productLine.png" alt="松下产线" class="Logo_left">
+            </div>
+            <div class="col-lg-7 col-md-7 col-sm-7 text-right lineHead_right">
+                <img src="productLine-letter.png" alt="松下家电" class="Logo_right">
+            </div>
+        </div>
+    </div>
+    <div class="container productLine_main">
+        <div class="row line_type">
+            <div class="col-lg-7 col-md-7 col-sm-7  machine_type" ><strong>当前生产机型: <span class="strong2">     </span></strong></div>
+            <div class="col-lg-5 col-md-5 col-sm-5 text-center line_name"><strong>生产线别: <span class="strong1">    </span></strong></div>
+        </div>
+        <div class="row product_plan">
+            <div class="col-lg-4 col-md-4 col-sm-4 plan_type">
+                <ul class="plan_each">
+                    <li><strong>生产计划</strong></li>
+                    <li>理论进度</li>
+                    <li>实际进度</li>
+                    <li>达成率</li>
+                </ul>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 data_detail">
+                <ul class="data_each">
+                    <li>0</li>
+                    <li>0</li>
+                    <li>0</li>
+                    <li>0.00%</li>
+                </ul>
+            </div>
+            <div class="col-lg-5 col-md-5 col-sm-5 chart_detail" style="padding: 0;">
+                <div class="chart_each" style="width: 100%;height:100%;margin-top: -1px;">
+                </div>
+            </div>
+        </div>
+        <div class="row product_time">
+            <div class="col-lg-12 foot_time">
+               	 
+            </div>
+        </div>
+    </div>
+    <div class="info text-center"><p class="message"></p></div>
+    <script>
+        $(function() {
+            var div = document.querySelector('.foot_time');
+                if($(".chart_detail").height() != $(".data_detail").height()){
+                    $(".chart_detail").css("height",$(".data_detail").height());
+                }
+            
+            
+            function GetRequest() {
+        	    var url = location.search; 
+        	    var theRequest = new Object();
+        	    if (url.indexOf("?") != -1) {
+        	        var str = url.substr(1);
+        	        strs = str.split("&");
+        	        for(var i = 0; i < strs.length; i ++) {
+        	            theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+        	        }
+        	    }
+        	    return theRequest;
+        	}
+        	var name = new Object();
+        	name = GetRequest();
+        	
+        	 var timer, timer1, beat;
+        	 var myChart =  echarts.init(document.querySelector('.chart_each'),'light') ;
+             function getData() {
+                 $.ajax({
+                     url:'http://172.16.20.113:8080/dafeng_mes/plan2/showLineStatus2',
+                     data:{NAME: name.id},
+                     dataType: 'json',
+                     success: function(data) {
+                    	console.log(data);
+                    	timer1 = data[1].time.time;
+                    	console.log(timer1);
+                    	 $('.strong1').text(data[2].NAME);
+                        	if(data[2].STATUS == '休息中'){
+                        		 $('.info').show(600);
+                        	}else {
+                        		$('.info').hide(600);
+                        	}
+                         if(data[2].STATUS == '未执行'){
+                        	 
+                         	$('.strong2').text('未执行');
+                         	$('.data_each>li').eq(0).text(0);
+                             $('.data_each>li').eq(1).text(0);
+                             $('.data_each>li').eq(2).text(0);
+                         	$('.data_each>li').eq(3).text('0.00%');
+                         }else if(data[2].STATUS == '暂无计划'){
+                        	 $('.strong2').text('暂无计划');
+                          	$('.data_each>li').eq(0).text(0);
+                              $('.data_each>li').eq(1).text(0);
+                              $('.data_each>li').eq(2).text(0);
+                          	$('.data_each>li').eq(3).text('0.00%');
+                         }else if(data[2].STATUS == '休息中'){
+                        	 if (JSON.stringify(data[0]) == '{}'){
+                        		 $('.message').text(data[2].STATUS);
+                        		 $('.info').show(600);
+                        		 $('.data_each>li').eq(0).text(0);
+                                 $('.data_each>li').eq(1).text(0);
+                                 $('.data_each>li').eq(2).text(0);
+                             	 $('.data_each>li').eq(3).text('0.00%');
+                        	 }
+                        	 else{
+                        		 $('.message').text(data[2].STATUS);
+                        		 if (data[0].PRODUCT_SPECIFICATIONS.length > 12) {
+                            		 $('.strong2').text(data[0].PRODUCT_SPECIFICATIONS.slice(0, 12));
+                            	 }else {
+                            		 $('.strong2').text(data[0].PRODUCT_SPECIFICATIONS);
+                            	 }
+                             	 $('.strong2').text(data[0].PRODUCT_SPECIFICATIONS);
+                                 var rate;
+                                 $('.data_each>li').eq(0).text(data[0].PLAN_AMOUNT);
+                                 if(parseInt(data[0].PLAN_AMOUNT)<parseInt(data[0].theoryNumber)){
+                                	 $('.data_each>li').eq(1).text(data[0].PLAN_AMOUNT);
+                                	 
+                                	 rate = ((parseInt(data[0].PRODUCT_AMOUNT) / parseInt(data[0].PLAN_AMOUNT)) * 100).toFixed(2) + '%'
+                                	 $('.data_each>li').eq(3).text(rate);
+                                	 
+                                 }else{
+                                	 $('.data_each>li').eq(1).text(data[0].theoryNumber);
+                                	 
+                                	 if(parseInt(data[0].theoryNumber) == 0) {
+                                    	 rate = '0.00%';
+                                    	 $('.data_each>li').eq(3).text(rate);
+                                     }else {
+                                    	 rate = ((parseInt(data[0].PRODUCT_AMOUNT) / parseInt(data[0].theoryNumber)) * 100).toFixed(2) + '%'
+                                    	 $('.data_each>li').eq(3).text(rate);
+                                     }
+                                 }
+                                 $('.data_each>li').eq(2).text(data[0].PRODUCT_AMOUNT);
+                                
+                        	 }
+                        	 
+                         /*     if (data[0].theoryNumber == 0) {
+                            	 $('.data_each>li').eq(3).text('0.00%');
+                             }
+                             else {
+                            	 rate = ((data[0].PRODUCT_AMOUNT / data[0].theoryNumber) * 100).toFixed(2) + '%'
+                            	 $('.data_each>li').eq(3).text(rate);
+                             }  */
+                             
+                         }else {
+                        	 
+                        	 if (data[0].PRODUCT_SPECIFICATIONS.length > 12) {
+                        		 $('.strong2').text(data[0].PRODUCT_SPECIFICATIONS.slice(0, 12));
+                        	 }else {
+                        		 $('.strong2').text(data[0].PRODUCT_SPECIFICATIONS);
+                        	 }
+                             var rate;
+                             $('.data_each>li').eq(0).text(data[0].PLAN_AMOUNT);
+                             if(parseInt(data[0].PLAN_AMOUNT)<parseInt(data[0].theoryNumber)){
+                            	 $('.data_each>li').eq(1).text(data[0].PLAN_AMOUNT);
+                            	 
+                            	 rate = ((parseInt(data[0].PRODUCT_AMOUNT) / parseInt(data[0].PLAN_AMOUNT)) * 100).toFixed(2) + '%'
+                            	 $('.data_each>li').eq(3).text(rate);
+                            	 
+                             }else{
+                            	 $('.data_each>li').eq(1).text(data[0].theoryNumber);
+                            	 
+                            	 if(parseInt(data[0].theoryNumber) == 0) {
+                                	 rate = '0.00%';
+                                	 $('.data_each>li').eq(3).text(rate);
+                                 }else {
+                                	 rate = ((parseInt(data[0].PRODUCT_AMOUNT) / parseInt(data[0].theoryNumber)) * 100).toFixed(2) + '%'
+                                	 $('.data_each>li').eq(3).text(rate);
+                                 }
+                             }
+                             $('.data_each>li').eq(2).text(data[0].PRODUCT_AMOUNT);
+                            
+                    	 }
+                        
+                            var option = {
+                                title: {
+                                    text: '当日生产进度',
+                                    left: 'center',
+                                    textStyle: {
+                                        fontSize: '45',
+                                        fontWeight: 'bold',
+                                    }
+                                },
+                                grid:{
+                                    left:100,
+                                    top: 72,
+                                    bottom: 50
+                                },
+                                tooltip: {},
+                                xAxis: {
+                                    data: ['总产量', '理论进度', '实际进度'],
+                                    axisLabel: {
+                                        
+                                    	textStyle: {
+                                            fontSize: '35',
+                                            fontWeight: 'bold'
+                                        },
+                                        interval:0
+                                    }
+                                },
+                                yAxis: {
+                                    axisLabel: {
+                                        textStyle: {
+                                            fontSize: '32',
+                                            fontWeight: 'bold'
+                                        }
+                                    }
+                                },
+                                series: [
+                                    {
+                                        name: ['当日生产进度'],
+                                        type: 'bar',
+                                        itemStyle:{
+                                            normal:{
+                                            color: function (params) {
+                                                var colorList = ['orange', 'skyblue', 'green'];
+                                                return colorList[params.dataIndex];
+                                            }
+                                            }
+                                        },
+                                        data: [data[1].totaPlanAmount, data[1].totalTheoryNumber, data[1].totalActualNumber]
+                                    }
+                                ]
+                            };
+                            myChart.setOption(option);
+                     }	
+                 })
+             }   
+            getData(); 
+            setInterval(getData, 50000);
+            function setTime() {
+            	 timer1 += 1000;
+            	 timer = new Date(timer1);
+            	 var hours = (timer.getHours() / 10) >= 1 ? timer.getHours() : '0' + timer.getHours(); 
+                 var minutes = (timer.getMinutes() / 10) >= 1 ? timer.getMinutes() : '0' + timer.getMinutes();
+                 var seconds = (timer.getSeconds() / 10) >= 1 ? timer.getSeconds() : '0' + timer.getSeconds();
+				 div.innerHTML = timer.getFullYear() + '年' + (timer.getMonth() + 1) + '月' + timer.getDate()+ '日 ' + hours + ':' + minutes + ':' + seconds;    
+             }
+            setInterval(setTime, 1000);
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ProcessFileManagerMxMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		BASE_PROCESSFILEMANAGERMX
+	</sql>
+	<sql id="productTable">
+		BASE_PRODUCT
+	</sql>
+	<!-- 字段 -->
+	<sql id="Field">
+		MATERIAL_CODING,	
+		PROCESSFILEMANAGERMX_ID,
+		PROCESSFILEMANAGER_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{MATERIAL_CODING},	
+		#{PROCESSFILEMANAGERMX_ID},
+		#{PROCESSFILEMANAGER_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 手动增加 -->
+	<insert id="save2" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field"></include>
+		) values (
+	      #{PRODUCT_CODING},#{PROCESSFILEMANAGERMX_ID},#{PROCESSFILEMANAGER_ID}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PROCESSFILEMANAGERMX_ID = #{PROCESSFILEMANAGERMX_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			MATERIAL_CODING = #{MATERIAL_CODING},
+			MATERIAL_NAME = #{MATERIAL_NAME},
+			MATERIAL_SPECIFICATIONS = #{MATERIAL_SPECIFICATIONS},
+		    PROCESSFILEMANAGERMX_ID = PROCESSFILEMANAGERMX_ID
+		where 
+		PROCESSFILEMANAGERMX_ID = #{PROCESSFILEMANAGERMX_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		a.MATERIAL_CODING,	
+		a.PROCESSFILEMANAGERMX_ID,
+		a.PROCESSFILEMANAGER_ID,
+		b.PRODUCT_SPECIFICATIONS,
+		b.PRODUCT_NAME,
+		b.PRODUCT_CODE
+		from 
+		<include refid="tableName"></include>
+		a,
+		<include refid="productTable"></include>
+		b
+		where 
+			a.PROCESSFILEMANAGERMX_ID = #{PROCESSFILEMANAGERMX_ID}
+			and
+			a.MATERIAL_CODING = b.PRODUCT_CODE
+	</select>
+	
+	<!-- 通过PROCESSFILEMANAGER_ID的id查找出数据 -->
+	<select id="findByProcessFileManager_Id" parameterType="pd" resultType="pd">
+		select 
+		a.MATERIAL_CODING,	
+		a.PROCESSFILEMANAGERMX_ID,
+		a.PROCESSFILEMANAGER_ID,
+		b.PRODUCT_NAME,
+		b.PRODUCT_SPECIFICATIONS
+		from 
+		<include refid="tableName"></include>
+		a,
+		<include refid="productTable"></include>
+		b
+		where 
+		PROCESSFILEMANAGER_ID = #{PROCESSFILEMANAGER_ID}
+		and
+   		a.MATERIAL_CODING=b.PRODUCT_CODE
+	</select>
+	
+	<!-- 通过PROCESSFILEMANAGER_ID的id查找出数据 -->
+	<select id="findCode" parameterType="pd" resultType="pd">
+		select 
+		*
+		from 
+		<include refid="tableName"></include>
+		where 
+			MATERIAL_CODING = #{MATERIAL_CODING} and PROCESSFILEMANAGER_ID = #{PROCESSFILEMANAGER_ID}
+	</select>
+	<!-- 根据物料编码在MX表中查出MX_ID -->
+	<select id="findCode3" parameterType="pd" resultType="pd">
+		select 
+		*
+		from
+		BASE_PROCESSFILEMANAGERMX
+		where 
+			MATERIAL_CODING = #{MATERIAL_CODING}
+	</select>
+	
+	<!-- 根据MX_ID在MX表中查出物料编码 -->
+	<select id="findCode4" parameterType="pd" resultType="pd">
+		select 
+		*
+		from
+		BASE_PROCESSFILEMANAGERMX
+		where 
+			PROCESSFILEMANAGERMX_ID = #{PROCESSFILEMANAGERMX_ID}
+	</select>
+	
+	<select id="findCode2" parameterType="pd" resultType="pd">
+		select 
+		*
+		from 
+		<include refid="tableName"></include>
+		where 
+			MATERIAL_CODING = #{MATERIAL_CODING} and PROCESSFILEMANAGER_ID = #{PROCESSFILEMANAGER_ID}
+	</select>
+	
+	
+	<!--findCodeByMxId  -->
+	<select id="findCodeByMxId" parameterType="pd" resultType="pd">
+		select 
+		MATERIAL_CODING
+		from 
+		<include refid="tableName"></include>
+		where 
+			PROCESSFILEMANAGERMX_ID = #{PROCESSFILEMANAGERMX_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		a.MATERIAL_CODING,	
+		a.PROCESSFILEMANAGERMX_ID,
+		a.PROCESSFILEMANAGER_ID,
+		b.PRODUCT_NAME,
+		b.PRODUCT_SPECIFICATIONS
+		from 
+		<include refid="tableName"></include>
+		a,
+		<include refid="productTable"></include>
+		b
+		where a.PROCESSFILEMANAGER_ID = #{pd.PROCESSFILEMANAGER_ID}
+		and
+	    a.MATERIAL_CODING=b.PRODUCT_CODE
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					a.MATERIAL_CODING LIKE '%'+ #{pd.keywords}+'%'
+					or
+					b.PRODUCT_NAME LIKE '%'+ #{pd.keywords}+'%'
+					or
+					b.PRODUCT_SPECIFICATIONS LIKE '%'+ #{pd.keywords}+'%'
+				)
+		</if>
+	</select>
+	
+	
+	<!-- 执行ERP中的一个存储过程，创建出临时表tempdb.dbo.rhztest-->
+	<select id="findMessFromERP" parameterType="pd" resultType="pd">
+		EXEC ${LINKSERVER}.${LINKDATABASE}.dbo.pr_GetBomProductFromSQLServer #{PRODUCT_CODING};
+        select distinct 母件编码 as parentCode,BomId,母件Id as parentId,母件名称 as parentName,PItemSpec
+        from ${LINKSERVER}.tempdb.dbo.rhztest
+        WHERE 母件编码 LIKE '2%' or 母件编码 LIKE '3%'
+	</select>
+	<!-- 从创建出临时表tempdb.dbo.rhztest查询数据-->
+	<select id="findMessFromtempdbo" parameterType="pd" resultType="pd">
+        select distinct 母件编码 as parentCode,BomId,母件Id as parentId,母件名称 as parentName,PItemSpec
+        from ${LINKSERVER}.tempdb.dbo.rhztest
+        WHERE 母件编码 LIKE '2%' or 母件编码 LIKE '3%'
+	</select>
+	
+	
+	
+	<!-- 添加子物料时判断是否已经添加过该子物料-->
+	<select id="findByMaterialCodeAndManager" parameterType="pd" resultType="pd">
+		select
+			*
+		from 
+			BASE_PROCESSFILEMANAGERMX
+		where
+		    PROCESSFILEMANAGER_ID = #{PROCESSFILEMANAGER_ID} and MATERIAL_CODING = #{materialCode}
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		a.MATERIAL_CODING,	
+		a.PROCESSFILEMANAGERMX_ID,
+		a.PROCESSFILEMANAGER_ID,
+		b.PRODUCT_NAME as PRODUCT_NAME,
+		b.PRODUCT_SPECIFICATIONS as PRODUCT_SPECIFICATIONS
+		from 
+		<include refid="tableName"></include>
+		a,
+		<include refid="productTable"></include>
+		b
+		where a.PROCESSFILEMANAGER_ID = #{PROCESSFILEMANAGER_ID}
+		and
+	    a.MATERIAL_CODING=b.PRODUCT_CODE
+		<if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					a.MATERIAL_CODING LIKE '%'+ #{keywords}+'%'
+					or
+					b.PRODUCT_NAME LIKE '%'+ #{keywords}+'%'
+					or
+					b.PRODUCT_SPECIFICATIONS LIKE '%'+ #{keywords}+'%'
+				)
+		</if>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PROCESSFILEMANAGERMX_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	
+	
+	<!-- 查询出所有的已配置过工位信息的物料 -->
+	<select id="findAllMaterStationMess" parameterType="pd" resultType="pd">
+		select
+			distinct PROCESSFILEMANAGERMX_ID
+		from 
+			BASE_PROCESSFILEMANAGERMXMX
+	</select>
+	
+	<!-- 复制工位的时候，根据查询的关键字搜索出相应的信息 -->
+	<select id="datalistPageMess" parameterType="page" resultType="pd">
+		select
+			distinct a.PROCESSFILEMANAGERMX_ID as materialMxId,c.PRODUCT_CODE,c.PRODUCT_NAME,c.PRODUCT_SPECIFICATIONS
+		from 
+			BASE_PROCESSFILEMANAGERMX a,BASE_PROCESSFILEMANAGERMXMX b,BASE_PRODUCT c 
+		where
+			a.PROCESSFILEMANAGERMX_ID = b.PROCESSFILEMANAGERMX_ID and  a.MATERIAL_CODING = c.PRODUCT_CODE
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					a.MATERIAL_CODING LIKE '%'+ #{pd.keywords}+'%'
+					or
+					c.PRODUCT_NAME LIKE '%'+ #{pd.keywords}+'%'
+					or
+					c.PRODUCT_SPECIFICATIONS LIKE '%'+ #{pd.keywords}+'%'
+				)
+		</if>
+	</select>
+	
+	<!-- 查询明细总数 -->
+	<select id="findCount" parameterType="pd" resultType="pd">
+		select
+			count(*) zs
+		from 
+			<include refid="tableName"></include> 
+		where
+		PROCESSFILEMANAGER_ID = #{PROCESSFILEMANAGER_ID}
+	</select>
+		<!-- rhz -->
+</mapper>

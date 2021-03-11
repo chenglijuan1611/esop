@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1,user-scalable=0">	
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=8">
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Pragma" content="no-cache">	
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Cache" content="no-cache">
+	<title>receive</title>
+	<style>
+		*{
+			margin: 0 auto;
+			padding: 0;
+		}
+		body{
+			overflow:hidden; 
+			background-color:#000000;	
+		}
+		canvas{
+			display: block;
+		}
+		.container{
+		 zoom:0.5;		 
+	   }
+	   
+/*-----调试用，正式用去掉-------- */
+       div.message {
+       	width:500px;
+   		height:200px;
+   		position: absolute; 
+   		margin-top:15px; 
+   		margin-left:15px;
+      }
+      
+       p {
+      	color:#ffffff; 
+      	/* font-size:24px; */
+        }
+/*--------------------------- */
+          
+ 
+	</style>
+	<script src="jquery.min.js"></script>
+	<script src="pdf1.js"></script>
+</head>
+
+<body>	
+	<div class="container">
+/*-----调试用，正式用去掉-------- */
+	   <div class="message">
+   		<p id="message_websocket"></p>
+   		<p id="message_ajax"></p>
+   	 </div>
+/*--------------------------- */ 
+	<canvas id="the-canvas"></canvas>
+	</div>	
+ 
+<script>
+	var u = navigator.userAgent;
+	var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+	var locationUrl = 'http://'+window.location.host;
+	window.onload = getData();
+	var pdfDoc = null, 
+	pageNum = 1, 
+	icount=0,
+	pageRendering = false, 
+	pageNumPending = null, 
+	scale = getQueryString("scale"), 
+	canvas = document.getElementById('the-canvas'), 
+	ctx = canvas.getContext('2d'); 
+
+	function callAndroid(){
+		// 由于对象映射，所以调用test对象等于调用Android映射的对象
+		SysShutdown.shutdown();
+	} 
+
+	//canvas.height=canvas.height;
+	function renderPage(num) { 
+		pageRendering = true; 
+		pdfDoc.getPage(num).then(function(page) { 
+		var viewport = page.getViewport(scale); 
+		canvas.height = viewport.height;//screen.height-20;//screen.height-2; screen.availHeight;
+		canvas.width = viewport.width;//;screen.width-2 //screen.availWidth;
+		var renderContext = { 
+			canvasContext: ctx, 
+			viewport: viewport 
+		}; 
+		var renderTask = page.render(renderContext); 
+	
+		renderTask.promise.then(function() { 
+		pageRendering = false; 
+		if (pageNumPending !== null) { 
+			renderPage(pageNumPending); 
+			pageNumPending = null; 
+		} 
+	}); 
+	}); 
+	
+	//document.getElementById('page_num').textContent = pageNum; 
+	} 
+	
+	function queueRenderPage(num) { 
+	if (pageRendering) { 
+		pageNumPending = num; 
+	} else { 
+		renderPage(num); 
+	} 
+	} 
+	
+	function loadpdf(url){
+		pdfDoc = null;
+		//DEFAULT_SCALE = document.documentElement.clientWidth,
+		pageNum = 1 ;
+		pageRendering = false; 
+		pageNumPending = null; 
+		//scale = 3.3; 
+		canvas = document.getElementById('the-canvas'); 
+		ctx = canvas.getContext('2d'); 
+		//canvas.height=canvas.height;
+		//var url=urlhead+document.getElementById("message").value;
+		//console.log(url);
+		PDFJS.getDocument(url).then(function(pdfDoc_) { 
+			pdfDoc = pdfDoc_; 
+			//document.getElementById('page_count').textContent = pdfDoc.numPages; 
+			renderPage(pageNum); 
+		});	
+
+		//console.log(pdfDoc.numPages);
+		clearInterval(icount);
+		//if(pdfDoc!=null)
+			icount=setInterval(slowAlert,10000);
+	}
+	
+	
+	
+	function slowAlert() {
+		if(pdfDoc.numPages == 1){
+			pageNum = 1;
+		}else{
+			if (pageNum >= pdfDoc.numPages) { 
+				pageNum=0; 
+			} 
+			pageNum++; 
+			queueRenderPage(pageNum);			
+		}		
+	}
+	
+	function getQueryString(name) {
+	var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)','i');
+	var r = window.location.search.substr(1).match(reg);
+	if (r != null) {
+		return unescape(r[2]);
+	}
+	return null;
+	}
+
+	//---------------心跳包-----------------------
+	//var userId=$("#userId").val();
+	var lockReconnect = false;  //避免ws重复连接
+	var ws = null;          // 判断当前浏览器是否支持WebSocket
+	var wsUrl = "ws://"+window.location.hostname+":8887";
+	createWebSocket(wsUrl);   //连接ws
+	
+	function createWebSocket(url) {
+	    try{
+	         if('WebSocket' in window){
+	            ws = new WebSocket(url);
+	        }else if('MozWebSocket' in window){  
+	            ws = new MozWebSocket(url);
+	        }else{
+	            console.log("你的浏览器不支持WEBSOCKET");
+	        } 
+	        initEventHandle();
+	    }catch(e){
+	        reconnect(url);
+	        console.log(e);
+	    }     
+	}
+	
+	function initEventHandle() {
+	    ws.onclose = function () {
+	        reconnect(wsUrl);
+	        console.log("llws连接关闭!"+new Date().toUTCString());
+	    };
+	    ws.onerror = function () {
+	        reconnect(wsUrl);
+	        console.log("llws连接错误!");
+	    };
+	    ws.onopen = function () {
+	    	ws.send('FHadminqq313596790' + getQueryString('id'));
+	        heartCheck.reset().start();      //心跳检测重置
+	        console.log("llws连接成功!"+new Date().toUTCString());
+	        //ws.send('FHadminqq313596790' + getQueryString('id'));
+	    };
+	
+	    var DataLast = ""; 
+	    ws.onmessage = function (event) {    //如果获取到消息，心跳检测重置
+	        var Data_received = event.data;
+	   		console.log("-------------ws-message---------------");
+			console.log(Data_received);
+			console.log("-------------ws-message---------------");			
+			/*-----调试用，正式用去掉-------- */
+			 document.getElementById("message_websocket").innerHTML = event.data;
+			/*-------------------------- */
+
+			if(Data_received.indexOf("shutdown") != -1)
+			{
+				console.log("------------------------");
+				console.log(event.data);
+				
+				//android shutdown
+				if(isAndroid){
+					callAndroid();
+				}				
+				
+				//windows shutdown
+				if (typeof jsObj == "undefined") {
+					//alert("jsObj参数未初始化")
+					return;
+				}
+				jsObj.MessageText = "shutdown";
+				jsObj.ShowTest();				
+				
+			}
+			
+	        if(Data_received.length > 8){
+	        	var DataNew = Data_received.split("_");
+	        	if(DataNew[0] == "[私信]  1"){
+	        		if(DataLast == event.data){
+	        			setTimeout('loadpdf(DataNew[1])', 500);
+	        		}
+	        		else{
+	        				loadpdf(DataNew[1]);
+	    					send("fhadmin886" + DataNew[2] + "fhfhadmin888success" + getQueryString('id'));
+	            	}
+	        	} 
+	    	}
+	        
+	        heartCheck.reset().start();      //拿到任何消息都说明当前连接是正常的
+	        console.log("llws收到消息啦:" +event.data); 
+		}
+	}
+	// 监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+	/* window.onbeforeunload = function() {
+	    ws.close();
+	} */  
+	window.onbeforeunload = function() {
+	    closeWebSocket();
+	}
+	
+	//关闭WebSocket连接
+	function closeWebSocket() {
+	    ws.close();
+	}
+	
+	function reconnect(url) {
+	    if(lockReconnect) return;
+	    lockReconnect = true;
+	    setTimeout(function () {     //没连接上会一直重连，设置延迟避免请求过多
+	        createWebSocket(url);
+	        lockReconnect = false;
+	    }, 2000);
+	}
+	
+	//心跳检测
+	var heartCheck = {
+	    timeout: 540000,        //9分钟发一次心跳
+	    timeoutObj: null,
+	    serverTimeoutObj: null,
+	    reset: function(){
+	        clearTimeout(this.timeoutObj);
+	        clearTimeout(this.serverTimeoutObj);
+	        return this;
+	    },
+	    start: function(){
+	        var self = this;
+	        this.timeoutObj = setTimeout(function(){
+	            //这里发送一个心跳，后端收到后，返回一个心跳消息，
+	            //onmessage拿到返回的心跳就说明连接正常
+	            ws.send("ping");
+	            console.log("ping!");
+	            self.serverTimeoutObj = setTimeout(function(){//如果超过一定时间还没重置，说明后端主动断开了
+	                ws.close();     //如果onclose会执行reconnect，我们执行ws.close()就行了.如果直接执行reconnect 会触发onclose导致重连两次
+	            }, self.timeout)
+	        }, this.timeout)
+	    }
+	}
+
+	//--------------------------------------   
+    function getData(){
+    	var app = locationUrl + "/dafeng_mes/appuser/findFileUrl?lineName="+getQueryString("id").split("-")[0]+"&terminalCode="+getQueryString("id")+"&random="+Math.random();
+    	//alert(app);
+    	var lineName= getQueryString("id").split("-");
+    	$.ajax({    
+		  url:app,
+		  type: "POST",
+	      dataType:"JSON",
+	      cache:false,
+	      success: function(data){
+	    /*-----调试用，正式用去掉-------- */
+	          document.getElementById("message_ajax").innerHTML = data; 
+	    /*-------------------------- */
+	    	  loadpdf(data.url);
+			} 
+    	})
+    }
+
+    //发送消息
+    //消息的格式：{content = "fhadmin886"+toUser+"fhfhadmin888" + content;}
+    function send(message) {
+        //var message = document.getElementById('text').value;
+        ws.send(message);
+    }
+
+</script>
+</body>
+</html>
+ 

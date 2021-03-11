@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>图片预览</title>
+		<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+		<style type="text/css">
+			body{
+			overflow: scroll;
+			}	
+			
+		</style>
+	</head>
+	<body>
+		
+	<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>	
+	<script type="text/javascript">
+	$(function(){
+	$("body").html("");
+	var imgurl = GetQueryString("imgurl");
+		var append = "";
+		if(imgurl.indexOf(",") == -1){
+			append = append + "<img src='"+imgurl+"' width='100%' height='100%''>";
+		}else if(imgurl.indexOf(",") != -1){
+			var imgArr = imgurl.split(",");
+			for(var i = 0;i<imgArr.length;i++){
+				append = append + "<img src='"+imgArr[i]+"' width='100%' height='100%''></br>";
+			}
+		}
+		$("body").append(append);	
+	})	
+	/*获取url参数*/
+	function GetQueryString(name){
+	  var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+	  var r = window.location.search.substr(1).match(reg);//search,查询？后面的参数，并匹配正则
+	  if(r!=null)return  decodeURI(r[2]); return null;
+	}
+	</script>
+	</body>
+</html>
